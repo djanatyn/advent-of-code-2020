@@ -8,4 +8,8 @@ in rec {
   day1 = {
     haskell = pkgs.callPackage ./day1/day1-hs { };
   };
+
+  day2 = {
+    python = pkgs.callPackage ./day2/day2-py { };
+  };
 }
