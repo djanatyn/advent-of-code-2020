@@ -4,7 +4,7 @@ module Main where
 
 import Control.Monad (guard)
 import Data.List (nub)
-import System.IO (readFile)
+import System.IO (hGetContents, stdin)
 
 type Expense = Int
 
@@ -23,7 +23,7 @@ part2 expenses = nub $ do
 
 main :: IO ()
 main = do
-  expenses <- fmap (read @Expense) . lines <$> readFile "input"
+  expenses <- fmap (read @Expense) . lines <$> hGetContents stdin
 
   print $ part1 expenses
   print $ part2 expenses
