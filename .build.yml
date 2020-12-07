@@ -2,6 +2,6 @@
 image: nixos/unstable
 tasks:
   - build: |
-      nix run -f . day1.haskell -c day1-hs < day1/input
-      nix run -f . day2.python  -c day2-py < day2/input
-      nix run -f . day3.haskell -c day3-hs < day3/input
+      nix run -f advent-of-code-2020 day1.haskell -c day1-hs < advent-of-code-2020/day1/input
+      nix run -f advent-of-code-2020 day2.python  -c day2-py < advent-of-code-2020/day2/input
+      nix run -f advent-of-code-2020 day3.haskell -c day3-hs < advent-of-code-2020/day3/input
