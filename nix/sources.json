@@ -12,15 +12,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
-        "branch": "nixos-19.09",
-        "description": "DEPRECATED! This is an obsolete, read-only mirror of the NixOS/nixpkgs repository.",
-        "homepage": "https://github.com/NixOS/nixpkgs",
+        "branch": "master",
+        "description": "Nix Packages collection",
+        "homepage": "",
         "owner": "NixOS",
-        "repo": "nixpkgs-channels",
-        "rev": "75f4ba05c63be3f147bcc2f7bd4ba1f029cedcb1",
-        "sha256": "157c64220lf825ll4c0cxsdwg7cxqdx4z559fdp7kpz0g6p8fhhr",
+        "repo": "nixpkgs",
+        "rev": "7ff5e241a2b96fff7912b7d793a06b4374bd846c",
+        "sha256": "147kpxd7ijdxfm4pp7ns6bi1jvc5ck8wqc2r79sys8gxrbdm93m8",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs-channels/archive/75f4ba05c63be3f147bcc2f7bd4ba1f029cedcb1.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/7ff5e241a2b96fff7912b7d793a06b4374bd846c.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }

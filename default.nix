@@ -3,7 +3,7 @@ let
   packages = import sources.nixpkgs { };
   inherit (packages) pkgs;
 in rec {
-  inherit sources;
+  inherit sources pkgs;
 
   day1 = {
     haskell = pkgs.callPackage ./day1/day1-hs { };
@@ -15,5 +15,9 @@ in rec {
 
   day3 = {
     haskell = pkgs.callPackage ./day3/day3-hs { };
+  };
+
+  day4 = {
+    haskell = pkgs.callPackage ./day4/day4-hs { };
   };
 }
