@@ -25,17 +25,6 @@ data Property
   | CountryID
   deriving (Eq, Show)
 
-requiredProperties :: [Property]
-requiredProperties =
-  [ BirthYear,
-    IssueYear,
-    ExpirationYear,
-    Height,
-    HairColor,
-    EyeColor,
-    PassportID
-  ]
-
 newtype Field = Field (Property, String) deriving (Show)
 
 -- Passports can be valid or invalid
@@ -76,10 +65,27 @@ properties passport =
   fst
     <$> coerce @Passport @([(Property, String)]) passport
 
+requiredProperties :: Passport -> Validity
+requiredProperties passport
+  | required \\ properties passport == [] = Valid
+  | otherwise = Invalid
+  where
+    required =
+      [ BirthYear,
+        IssueYear,
+        ExpirationYear,
+        Height,
+        HairColor,
+        EyeColor,
+        PassportID
+      ]
+
 validate :: Passport -> Validity
 validate passport
-  | requiredProperties \\ properties passport == [] = Valid
+  | all (== Valid) $ checks <*> (pure passport) = Valid
   | otherwise = Invalid
+  where
+    checks = [requiredProperties]
 
 main :: IO ()
 main = do
