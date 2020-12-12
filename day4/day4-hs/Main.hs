@@ -1,7 +1,10 @@
+{-# LANGUAGE TypeApplications #-}
+
 module Main where
 
 import Control.Monad (join)
 import Data.Coerce (coerce)
+import Data.List ((\\))
 import Data.Void (Void)
 import System.IO (hGetContents, stdin)
 import Text.Megaparsec
@@ -22,10 +25,23 @@ data Property
   | CountryID
   deriving (Eq, Show)
 
+requiredProperties :: [Property]
+requiredProperties =
+  [ BirthYear,
+    IssueYear,
+    ExpirationYear,
+    Height,
+    HairColor,
+    EyeColor,
+    PassportID
+  ]
+
 newtype Field = Field (Property, String) deriving (Show)
 
 -- Passports can be valid or invalid
 newtype Passport = Passport [Field] deriving (Show)
+
+data Validity = Valid | Invalid deriving (Show, Eq)
 
 pField :: Parser Field
 pField = dbg "field" $ do
@@ -48,12 +64,27 @@ pFields :: Parser [Field]
 pFields = dbg "fields" $ someTill (L.lexeme hspace pField) newline
 
 pPassport :: Parser Passport
-pPassport = dbg "passport" $ Passport <$> (L.lexeme space pFields)
+pPassport = dbg "passport" $ Passport . join <$> some pFields
 
 pInput :: Parser [Passport]
 pInput =
   dbg "input" $
-    manyTill pPassport eof
+    manyTill (L.lexeme space pPassport) eof
+
+properties :: Passport -> [Property]
+properties passport =
+  fst
+    <$> coerce @Passport @([(Property, String)]) passport
+
+validate :: Passport -> Validity
+validate passport
+  | requiredProperties \\ properties passport == [] = Valid
+  | otherwise = Invalid
 
 main :: IO ()
-main = hGetContents stdin >>= parseTest pInput
+main = do
+  input <- hGetContents stdin
+  case parseMaybe pInput input of
+    Nothing -> error "foo"
+    Just passports ->
+      print . length . filter (== Valid) $ validate <$> passports
