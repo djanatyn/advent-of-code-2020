@@ -7,7 +7,10 @@ haskellPackages.mkDerivation rec {
   isLibrary = false;
   isExecutable = true;
 
-  executableHaskellDepends = with haskellPackages; [ base ];
+  executableHaskellDepends = with haskellPackages; [
+    base
+    cabal-install
+  ];
 
   src = builtins.path {
     path = ./.;
