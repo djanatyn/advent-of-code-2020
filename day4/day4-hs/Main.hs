@@ -81,7 +81,9 @@ requiredProperties passport
 
 validateField :: Field -> Validity
 validateField (Field (key, val)) = case key of
-  BirthYear -> Valid
+  BirthYear ->
+    let year = read @Int val
+     in if 1920 <= year && year <= 2002 then Valid else Invalid
   IssueYear -> Valid
   ExpirationYear -> Valid
   Height -> Valid
