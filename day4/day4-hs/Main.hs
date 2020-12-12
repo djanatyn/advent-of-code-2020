@@ -46,7 +46,6 @@ pField = dbg "field" $ do
         CountryID <$ string "cid:"
       ]
   val <- many (alphaNumChar <|> char '#')
-
   return $ Field (key, val)
 
 pFields :: Parser [Field]
@@ -63,7 +62,7 @@ pInput =
 properties :: Passport -> [Property]
 properties passport =
   fst
-    <$> coerce @Passport @([(Property, String)]) passport
+    <$> coerce @Passport @[(Property, String)] passport
 
 requiredProperties :: Passport -> Validity
 requiredProperties passport
@@ -80,17 +79,39 @@ requiredProperties passport
         PassportID
       ]
 
-validate :: Passport -> Validity
-validate passport
-  | all (== Valid) $ checks <*> (pure passport) = Valid
+validateField :: Field -> Validity
+validateField (Field (key, val)) = case key of
+  BirthYear -> Valid
+  IssueYear -> Valid
+  ExpirationYear -> Valid
+  Height -> Valid
+  HairColor -> Valid
+  EyeColor -> Valid
+  PassportID -> Valid
+  CountryID -> Valid
+
+validatePassportFields :: Passport -> Validity
+validatePassportFields passport
+  | all (== Valid) $ validateField <$> fields = Valid
   | otherwise = Invalid
   where
-    checks = [requiredProperties]
+    fields = coerce @Passport @[Field] passport
+
+validate :: Passport -> Validity
+validate passport
+  | all (== Valid) $ checks <*> pure passport = Valid
+  | otherwise = Invalid
+  where
+    checks :: [Passport -> Validity]
+    checks =
+      [ requiredProperties,
+        validatePassportFields
+      ]
 
 main :: IO ()
 main = do
   input <- hGetContents stdin
   case parseMaybe pInput input of
-    Nothing -> error "foo"
+    Nothing -> error "could not parse!"
     Just passports ->
       print . length . filter (== Valid) $ validate <$> passports
