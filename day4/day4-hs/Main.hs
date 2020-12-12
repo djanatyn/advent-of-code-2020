@@ -84,12 +84,40 @@ validateField (Field (key, val)) = case key of
   BirthYear ->
     let year = read @Int val
      in if 1920 <= year && year <= 2002 then Valid else Invalid
-  IssueYear -> Valid
-  ExpirationYear -> Valid
-  Height -> Valid
-  HairColor -> Valid
-  EyeColor -> Valid
-  PassportID -> Valid
+  IssueYear ->
+    let year = read @Int val
+     in if 2010 <= year && year <= 2020 then Valid else Invalid
+  ExpirationYear ->
+    let year = read @Int val
+     in if 2010 <= year && year <= 2030 then Valid else Invalid
+  Height ->
+    let pHeight :: Parser Validity
+        pHeight = dbg "height" $ do
+          height <- read @Int <$> some numberChar
+          unit <- (string "cm" <|> string "in")
+          case unit of
+            "cm" ->
+              return $ if 150 <= height && height <= 193 then Valid else Invalid
+            "in" ->
+              return $ if 59 <= height && height <= 76 then Valid else Invalid
+            _ -> return Invalid
+     in case parseMaybe pHeight val of Just v -> v; Nothing -> Invalid
+  HairColor ->
+    let pHair :: Parser Validity
+        pHair = dbg "hair" $ do
+          _ <- char '#'
+          hex <- count 6 hexDigitChar
+          return Valid
+     in case parseMaybe pHair val of Just v -> v; Nothing -> Invalid
+  EyeColor ->
+    let colors = ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
+        pEye :: Parser Validity
+        pEye = dbg "eyecolor" $ choice (string <$> colors) >> return Valid
+     in case parseMaybe pEye val of Just v -> v; Nothing -> Invalid
+  PassportID ->
+    let pID :: Parser Validity
+        pID = dbg "passportID" $ count 9 numberChar >> return Valid
+     in case parseMaybe pID val of Just v -> v; Nothing -> Invalid
   CountryID -> Valid
 
 validatePassportFields :: Passport -> Validity
@@ -106,9 +134,7 @@ validate passport
   where
     checks :: [Passport -> Validity]
     checks =
-      [ requiredProperties,
-        validatePassportFields
-      ]
+      [requiredProperties, validatePassportFields]
 
 main :: IO ()
 main = do
