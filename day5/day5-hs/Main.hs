@@ -30,8 +30,8 @@ pAction _ = error "could not parse action"
 pSeat :: String -> Seat
 pSeat input = Seat {seatRow = pAction <$> row, seatCol = pAction <$> col}
   where
-    row = intersect input "FB"
-    col = intersect input "LR"
+    row = input `intersect` "FB"
+    col = input `intersect` "LR"
 
 calcSeatID :: Bound -> Bound -> Int
 calcSeatID (rowMin, rowHigh) (colMin, colHigh)
@@ -51,5 +51,12 @@ solve Seat {seatRow, seatCol} =
 
 main :: IO ()
 main = do
-  input <- lines <$> hGetContents stdin
-  print $ solve . pSeat <$> input
+  input <- lines <$> getContents
+  let process = solve . pSeat
+      results = process <$> input
+      seatIDs = seatID . process <$> input
+      seatRange = [(minimum seatIDs) .. (maximum seatIDs)]
+   in do
+        print results
+        putStrLn $ "problem 1: " ++ show (maximum seatIDs)
+        putStrLn $ "problem 2: " ++ show (seatRange \\ seatIDs)
