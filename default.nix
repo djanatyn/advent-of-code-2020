@@ -20,4 +20,8 @@ in rec {
   day4 = {
     haskell = pkgs.callPackage ./day4/day4-hs { };
   };
+
+  day5 = {
+    haskell = pkgs.callPackage ./day5/day5-hs { };
+  };
 }
