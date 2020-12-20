@@ -3,7 +3,6 @@
 module Main where
 
 import Data.List
-import System.IO
 
 type Bound = (Int, Int)
 
