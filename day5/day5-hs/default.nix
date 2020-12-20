@@ -10,6 +10,7 @@ haskellPackages.mkDerivation rec {
   executableHaskellDepends = with haskellPackages; [
     base
     cabal-install
+    haskell-language-server
   ];
 
   src = builtins.path {
