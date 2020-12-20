@@ -6,3 +6,4 @@ tasks:
   - day3: nix run -f advent-of-code-2020 day3.haskell -c day3-hs < advent-of-code-2020/day3/input
   - day4: nix run -f advent-of-code-2020 day4.haskell -c day4-hs < advent-of-code-2020/day4/input
   - day5: nix run -f advent-of-code-2020 day5.haskell -c day5-hs < advent-of-code-2020/day5/input
+  - day6: nix run -f advent-of-code-2020 day6.haskell -c day6-hs < advent-of-code-2020/day6/input
